@@ -17,12 +17,6 @@ mst = 8     #mean service time
 mtbc = 1    #mean time between customers
 
 
-
-
-
-
-
-
 def poisson():
     P = [mst**i/ np.math.factorial(i) for i in range(m+1)]
     return P/np.sum(P)
@@ -137,10 +131,19 @@ showAnalytical()
 showPlot(r2)
 
 
+def sample2Values(U):
+    List = np.zeros((66,2))
+    k=0
+    for j in range(m+1):
+        for i in range(m+1-j):
+            List[k,:] = [i,j]
+            k+=1
+    return List[np.int(np.random.random()*66),:]
+
+
 def Metropolis_Hasting_2Coord(N):
     X = np.zeros((N,2)) #states
-    Y1 = np.random.randint(0, m+1)
-    Y2 = np.random.randint(0, m+1-Y1)
+    Y1,Y2 = sample2Values(np.random.random())
     switch = True
     for i in range(N-1):
         if g2(Y1,Y2) >= g2(X[i,0],X[i,1]):
@@ -166,10 +169,9 @@ showPlot(r3)
 
 
 
-
-
-
-sims = 10
+#pvalues tests
+sims = 100
+n = 10000
 
 UniqList = np.zeros((66,2))
 k=0
@@ -193,7 +195,7 @@ for i in range(sims):
 
     pvals2[i] = stats.chisquare(obs,An2*n/sampL2)[1]
 
-
+plt.figure()
 plt.plot(obs)
 plt.plot(An2*n/sampL2)
 
